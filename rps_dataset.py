@@ -20,7 +20,7 @@ class RockPaperScissorsDataset(Dataset):
         self.images: list[tuple[torch.Tensor, int]] = []
         for file in os.listdir(os.path.join(".", img_dir)):
             if file.endswith(".jpg"):
-                image = decode_image(os.path.join(".", img_dir, file))
+                image = decode_image(os.path.join(".", img_dir, file)).float() / 255.0
 
                 if file.startswith("rock"):
                     label = 0  # rock=0
@@ -60,7 +60,7 @@ class RockPaperScissorsDataset(Dataset):
             start = 0
             for split_idx, ratio in enumerate(ratios):
                 count = int(total_count * ratio)
-                splits[split_idx].extend(indices[start:start + count])
+                splits[split_idx].extend(indices[start : start + count])
                 start += count
 
         # Create Subset datasets
