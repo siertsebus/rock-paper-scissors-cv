@@ -3,6 +3,7 @@ from typing import Callable
 import torch
 from torch.utils.data import Dataset
 from torchvision.io import decode_image
+from torch.utils.data import Subset
 
 
 class RockPaperScissorsDataset(Dataset):
@@ -42,3 +43,25 @@ class RockPaperScissorsDataset(Dataset):
         if self.target_transform:
             label = self.target_transform(label)
         return image, label
+
+    def balanced_split(self, ratios: list[float]) -> list[Dataset]:
+        """Splits the dataset into balanced subsets according to the given ratios."""
+        # Group indices by class
+        class_indices: dict[int, list[int]] = {0: [], 1: [], 2: []}
+        for idx, (_, label) in enumerate(self.images):
+            class_indices[label].append(idx)
+
+        # Calculate number of samples per class for each split
+        assert sum(ratios) - 1.0 < 1e-6, "Ratios must sum to 1"
+
+        splits: list[list[int]] = [[] for _ in ratios]
+        for label, indices in class_indices.items():
+            total_count = len(indices)
+            start = 0
+            for split_idx, ratio in enumerate(ratios):
+                count = int(total_count * ratio)
+                splits[split_idx].extend(indices[start:start + count])
+                start += count
+
+        # Create Subset datasets
+        return [Subset(self, split) for split in splits]

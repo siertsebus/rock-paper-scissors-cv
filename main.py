@@ -1,4 +1,5 @@
 import torchvision
+import torch
 
 from rps_dataset import RockPaperScissorsDataset
 
@@ -16,6 +17,8 @@ def main() -> None:
     )
 
     dataset = RockPaperScissorsDataset(img_dir="rps_dataset")
+
+    train_set, val_set, test_set = dataset.balanced_split([0.7, 0.15, 0.15])
 
     print("chicken")
 
