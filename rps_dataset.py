@@ -44,7 +44,9 @@ class RockPaperScissorsDataset(Dataset):
             label = self.target_transform(label)
         return image, label
 
-    def balanced_split(self, ratios: list[float]) -> list[Dataset]:
+    def balanced_split(
+        self, ratios: list[float]
+    ) -> list[Subset[tuple[torch.Tensor, int]]]:
         """Splits the dataset into balanced subsets according to the given ratios."""
         # Group indices by class
         class_indices: dict[int, list[int]] = {0: [], 1: [], 2: []}
