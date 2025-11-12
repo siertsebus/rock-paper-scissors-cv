@@ -7,13 +7,6 @@ from tqdm import tqdm
 
 from rps_dataset import RockPaperScissorsDataset
 
-# Plan
-# 1. Load pretrained model
-# 2. Load in dataset, split in train/test
-# 3. Create a copy of the model, replace last layer with 3 output neurons
-# 4. Train the model on the training set (with most layers frozen)
-# 5. Evaluate both models on the test set
-
 
 def define_transform() -> transforms.Transform:
     transform_crop = transforms.RandomResizedCrop(
@@ -102,8 +95,8 @@ def main() -> None:
                 (top_class == torch.tensor(y, dtype=torch.int64)).sum().item()
             )
 
-        print(f"Final test loss: {test_loss_total / len(test_set)}")
-        print(f"Final test accuracy: {test_correct_total / len(test_set)}")
+    print(f"Final test loss: {test_loss_total / len(test_set)}")
+    print(f"Final test accuracy: {test_correct_total / len(test_set)}")
 
 
 if __name__ == "__main__":
